@@ -56,7 +56,21 @@ export const TipDialog: React.FC<TipDialogProps> = ({ creatorAddress, children }
             setTxHash(tx.hash);
         } catch (err: any) {
             console.error('Tipping failed:', err);
-            setError(err.message || 'Transaction failed');
+
+            // Robust check for RPC rate limiting or other specific errors
+            const isRateLimited =
+                err.message?.includes('-32002') ||
+                err.code === -32002 ||
+                err.error?.code === -32002 ||
+                err.info?.error?.code === -32002 ||
+                err.message?.toLowerCase().includes('too many errors') ||
+                err.message?.toLowerCase().includes('rate limit');
+
+            if (isRateLimited) {
+                setError('The RPC endpoint is currently busy or rate-limited. Please wait 30 seconds and try again, or switch your MetaMask to a different RPC provider (like Alchemy or Infura).');
+            } else {
+                setError(err.message || 'Transaction failed');
+            }
         } finally {
             setIsPending(false);
         }
@@ -118,12 +132,12 @@ export const TipDialog: React.FC<TipDialogProps> = ({ creatorAddress, children }
                             <p className="text-sm text-muted-foreground">Thank you for supporting the creator.</p>
                         </div>
                         <a
-                            href={`https://sepolia.etherscan.io/tx/${txHash}`}
+                            href={`https://basescan.org/tx/${txHash}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-primary hover:underline"
                         >
-                            View on Etherscan
+                            View on BaseScan
                         </a>
                     </div>
                 )}
@@ -133,7 +147,12 @@ export const TipDialog: React.FC<TipDialogProps> = ({ creatorAddress, children }
                         <AlertCircle className="h-12 w-12 text-destructive" />
                         <div>
                             <p className="font-bold text-lg text-destructive">Transaction Failed</p>
-                            <p className="text-sm text-muted-foreground">{error.substring(0, 100)}...</p>
+                            <p className="text-sm text-muted-foreground">{error}</p>
+                            {error.includes('RPC') && (
+                                <p className="text-xs text-primary mt-2 cursor-help underline decoration-dotted" onClick={() => alert('To fix this:\n1. Open MetaMask\n2. Go to Settings > Networks\n3. Select Base\n4. Change the RPC URL to a more reliable one like:\n   - https://base.llamarpc.com\n   - https://1rpc.io/base')}>
+                                    How to fix this?
+                                </p>
+                            )}
                         </div>
                         <Button variant="outline" size="sm" onClick={resetState}>Try Again</Button>
                     </div>

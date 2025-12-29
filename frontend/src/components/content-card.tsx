@@ -70,7 +70,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
             <div className="relative aspect-video overflow-hidden bg-muted">
                 {content.thumbnailUrl ? (
                     <img
-                        src={content.thumbnailUrl}
+                        src={content.thumbnailUrl.startsWith('http') ? content.thumbnailUrl : `http://localhost:5000${content.thumbnailUrl}`}
                         alt={content.title}
                         className="h-full w-full object-cover transition-transform group-hover:scale-105"
                     />
