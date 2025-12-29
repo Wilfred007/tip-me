@@ -5,10 +5,10 @@ import config from '../config/env';
 
 // Configure storage
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (_req, _file, cb) => {
         cb(null, config.uploadDir);
     },
-    filename: (req, file, cb) => {
+    filename: (_req, file, cb) => {
         const uniqueSuffix = crypto.randomBytes(16).toString('hex');
         const ext = path.extname(file.originalname);
         cb(null, `${Date.now()}-${uniqueSuffix}${ext}`);
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     // Allow common media types
     const allowedMimes = [
         'image/jpeg',
@@ -51,7 +51,7 @@ export const uploadMedia = multer({
 // Thumbnail upload
 export const uploadThumbnail = multer({
     storage,
-    fileFilter: (req, file, cb) => {
+    fileFilter: (_req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
