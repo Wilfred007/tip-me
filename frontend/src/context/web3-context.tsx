@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import '@/types'; // Import global window augmentation
 
 interface Web3ContextType {
     address: string | null;
