@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 import { Like } from '../models/Like';
 import { Content } from '../models/Content';
@@ -21,7 +21,7 @@ router.post(
             .notEmpty()
             .withMessage('Content ID is required')
     ],
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -60,7 +60,7 @@ router.post(
  * GET /likes/count/:contentId
  * Get like count for content
  */
-router.get('/count/:contentId', async (req: AuthRequest, res: Response, next) => {
+router.get('/count/:contentId', async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const { contentId } = req.params;
 
@@ -79,7 +79,7 @@ router.get('/count/:contentId', async (req: AuthRequest, res: Response, next) =>
 router.get(
     '/me/:contentId',
     authenticate,
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const { contentId } = req.params;
             const address = req.userAddress!;

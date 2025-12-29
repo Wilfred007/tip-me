@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 import { Comment } from '../models/Comment';
 import { Content } from '../models/Content';
@@ -28,7 +28,7 @@ router.post(
             .isLength({ max: 1000 })
             .withMessage('Comment too long')
     ],
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -63,7 +63,7 @@ router.post(
  * GET /comments/:contentId
  * Get all comments for content
  */
-router.get('/:contentId', async (req: AuthRequest, res: Response, next) => {
+router.get('/:contentId', async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const { contentId } = req.params;
         const page = parseInt(req.query.page as string) || 1;
@@ -108,7 +108,7 @@ router.put(
             .isLength({ max: 1000 })
             .withMessage('Comment too long')
     ],
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -151,7 +151,7 @@ router.put(
 router.delete(
     '/:commentId',
     authenticate,
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const { commentId } = req.params;
             const address = req.userAddress!;

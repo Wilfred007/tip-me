@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { authenticate } from '../middleware/auth';
 import { uploadMedia } from '../middleware/upload';
 import { AuthRequest } from '../types';
@@ -14,7 +14,7 @@ router.post(
     '/upload',
     authenticate,
     uploadMedia.single('file'),
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             if (!req.file) {
                 res.status(400).json({ error: 'No file uploaded' });

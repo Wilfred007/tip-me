@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { body, query, validationResult } from 'express-validator';
 import { Content } from '../models/Content';
 import { authenticate } from '../middleware/auth';
@@ -41,7 +41,7 @@ router.post(
             .optional()
             .trim()
     ],
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -79,7 +79,7 @@ router.get(
         query('category').optional().custom(isValidCategory).withMessage('Invalid category'),
         query('creator').optional().custom(isValidAddress).withMessage('Invalid creator address')
     ],
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -127,7 +127,7 @@ router.get(
  * GET /content/:id
  * Get single content by ID
  */
-router.get('/:id', async (req: AuthRequest, res: Response, next) => {
+router.get('/:id', async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const content = await Content.findById(req.params.id).lean();
 
@@ -147,7 +147,7 @@ router.get('/:id', async (req: AuthRequest, res: Response, next) => {
  */
 router.get(
     '/creator/:address',
-    async (req: AuthRequest, res: Response, next) => {
+    async (req: AuthRequest, res: Response, next: NextFunction) => {
         try {
             const { address } = req.params;
 
