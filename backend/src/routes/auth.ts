@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 import { AuthService } from '../services/authService';
 import { isValidAddress } from '../utils/validators';
@@ -55,7 +55,7 @@ router.post(
             .notEmpty()
             .withMessage('Signature is required')
     ],
-    (req: Request, res: Response, next) => {
+    (req: Request, res: Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
