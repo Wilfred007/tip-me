@@ -20,7 +20,7 @@ interface Config {
 const config: Config = {
     port: parseInt(process.env.PORT || '5000', 10),
     nodeEnv: process.env.NODE_ENV || 'development',
-    mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/tipjar',
+    mongodbUri: process.env.MONGODB_URI || 'mongodb+srv://streamaudiobox102_db_user:aCEIW6hJd5QszcJ7@cluster0.oudykdu.mongodb.net/',
     jwtSecret: process.env.JWT_SECRET || 'your-secret-key',
     jwtExpiration: process.env.JWT_EXPIRATION || '7d',
     rpcUrl: process.env.RPC_URL || '',
