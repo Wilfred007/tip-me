@@ -65,13 +65,13 @@ export class AuthService {
      * Generate JWT token
      */
     static generateToken(address: string): string {
-        const payload: Omit<JWTPayload, 'iat' | 'exp'> = {
+        const payload = {
             address: address.toLowerCase()
         };
 
         return jwt.sign(payload, config.jwtSecret, {
             expiresIn: config.jwtExpiration
-        });
+        } as jwt.SignOptions);
     }
 
     /**
